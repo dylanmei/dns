@@ -138,35 +138,35 @@ function update(records){
 
 		// create also public records
 		var qPubRec = [];
-		for(var zoneName in groupByZone){
-			var zone = groupByZone[zoneName];
+		//for(var zoneName in groupByZone){
+		//	var zone = groupByZone[zoneName];
 
-			// for each subdomain
-			zone.rec.forEach(function(r){
-				var qAddr = [];
-				var vAddr = [];
-				var q = Q.defer();
-				qPubRec.push(q.promise);
-				r.records.addr.forEach(function(addr){
-					
-					qAddr.push(utils.beacon(addr).then(function(b){
-						vAddr.push(JSON.parse(b).public)
-					}).fail(function(err){
-						debug(err);
-					}));
-				});
+		//	// for each subdomain
+		//	zone.rec.forEach(function(r){
+		//		var qAddr = [];
+		//		var vAddr = [];
+		//		var q = Q.defer();
+		//		qPubRec.push(q.promise);
+		//		r.records.addr.forEach(function(addr){
+		//			
+		//			qAddr.push(utils.beacon(addr).then(function(b){
+		//				vAddr.push(JSON.parse(b).public)
+		//			}).fail(function(err){
+		//				debug(err);
+		//			}));
+		//		});
 
-				// When we have the vAddr populated
-				Q.allSettled(qAddr).then(function(){
-					var pub = utils.clone(r);
-					pub.name = 'pub.' + pub.name;
-					pub.records.name = pub.name;
-					pub.records.addr = vAddr;
-					groupByZone[zoneName].rec.push(pub);
-					q.resolve();
-				});
-			});
-		}
+		//		// When we have the vAddr populated
+		//		Q.allSettled(qAddr).then(function(){
+		//			var pub = utils.clone(r);
+		//			pub.name = 'pub.' + pub.name;
+		//			pub.records.name = pub.name;
+		//			pub.records.addr = vAddr;
+		//			groupByZone[zoneName].rec.push(pub);
+		//			q.resolve();
+		//		});
+		//	});
+		//}
 
 		// Wait for every ip resolved
 		Q.allSettled(qPubRec).then(function(){
